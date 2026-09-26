@@ -24,7 +24,25 @@ Client → API Gateway (:8080) → Eureka (:8761)
 - Java 21, Spring Boot 4.1.0, Spring Cloud 2025.1.2
 - Netflix Eureka, Spring Cloud Gateway, OpenFeign
 - Spring Security + JWT (JJWT)
-- H2 in-memory databases (per service)
+- MySQL databases (per service: `authdb`, `productdb`, `orderdb`)
+
+## MySQL setup
+
+1. MySQL must be running locally.
+2. Copy secrets for each data service (gitignored — never commit these):
+
+```bash
+cp auth-service/src/main/resources/application-secrets.properties.example \
+   auth-service/src/main/resources/application-secrets.properties
+cp product-service/src/main/resources/application-secrets.properties.example \
+   product-service/src/main/resources/application-secrets.properties
+cp order-service/src/main/resources/application-secrets.properties.example \
+   order-service/src/main/resources/application-secrets.properties
+```
+
+3. Set `spring.datasource.username` / `spring.datasource.password` in each secrets file.
+
+Databases are created automatically (`createDatabaseIfNotExist=true`): `authdb`, `productdb`, `orderdb`.
 
 ## Build
 

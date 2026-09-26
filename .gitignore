@@ -4,6 +4,13 @@ target/
 !**/src/main/**/target/
 !**/src/test/**/target/
 
+### Local secrets (DB credentials) ###
+**/application-secrets.properties
+.env
+.env.*
+!.env.example
+
+
 ### STS ###
 .apt_generated
 .classpath
