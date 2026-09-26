@@ -33,7 +33,7 @@ public class JwtAuthenticationFilter implements WebFilter, Ordered {
         String path = request.getURI().getPath();
         HttpMethod method = request.getMethod();
 
-        if (isPublic(path, method)) {
+        if (HttpMethod.OPTIONS.equals(method) || isPublic(path, method)) {
             return chain.filter(exchange);
         }
 
