@@ -60,6 +60,7 @@
     </dependencyManagement>
 
     <build>
+        <finalName>E-com</finalName>
         <pluginManagement>
             <plugins>
                 <plugin>

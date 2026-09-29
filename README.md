@@ -64,9 +64,11 @@ Wait ~10–15 seconds after all services are up so Eureka registration completes
 
 Eureka dashboard: http://localhost:8761
 
-## React API tester
+## React API tester (separate frontend)
 
-Interactive UI for every gateway endpoint:
+Standalone UI in `test-ui/` — not served by the gateway. Host it on any static file server.
+
+**Local:**
 
 ```bash
 cd test-ui
@@ -74,8 +76,17 @@ npm install
 npm run dev
 ```
 
-Open http://localhost:5173 (proxies `/api` → gateway `:8080`). See `test-ui/README.md`.
+Open http://localhost:5173 (proxies `/api` → gateway `:8080`).
 
+**Production:**
+
+```bash
+cd test-ui
+cp .env.example .env   # set VITE_API_BASE_URL=https://your-gateway
+npm run build          # serve the dist/ folder
+```
+
+Allow the UI origin via `app.cors.allowed-origins` on the gateway. Details in `test-ui/README.md`.
 ## API examples (via gateway)
 
 ### Register

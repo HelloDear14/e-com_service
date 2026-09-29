@@ -1,3 +1,9 @@
+/** Gateway origin for production builds. Empty = relative `/api` (Vite proxy in dev). */
+export const API_BASE_URL = (import.meta.env.VITE_API_BASE_URL ?? '').replace(
+  /\/$/,
+  '',
+)
+
 export type ApiResult = {
   ok: boolean
   status: number
@@ -18,6 +24,7 @@ export async function apiRequest(
 ): Promise<ApiResult> {
   const { method = 'GET', body, token, headers = {} } = options
   const started = performance.now()
+  const url = path.startsWith('http') ? path : `${API_BASE_URL}${path}`
 
   const requestHeaders: Record<string, string> = { ...headers }
   if (body !== undefined) {
@@ -29,7 +36,7 @@ export async function apiRequest(
 
   let response: Response
   try {
-    response = await fetch(path, {
+    response = await fetch(url, {
       method,
       headers: requestHeaders,
       body: body !== undefined ? JSON.stringify(body) : undefined,
@@ -44,7 +51,7 @@ export async function apiRequest(
         message:
           error instanceof Error
             ? error.message
-            : 'Failed to reach the API. Is the gateway running on :8080?',
+            : 'Failed to reach the API. Is the gateway running?',
       },
       rawText: '',
     }

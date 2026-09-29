@@ -1,20 +1,12 @@
 # E-Com API Tester
 
-React UI to exercise every gateway endpoint (auth, products, orders).
+Standalone React UI for every gateway endpoint (auth, products, orders). Host this separately from the Spring Boot services.
 
 ## Prerequisites
 
-Start the backend in order (see root README), then wait ~10–15s for Eureka registration:
+Start the backend in order (see root README), then wait ~10–15s for Eureka registration.
 
-```bash
-./mvnw -pl eureka-server spring-boot:run
-./mvnw -pl auth-service spring-boot:run
-./mvnw -pl product-service spring-boot:run
-./mvnw -pl order-service spring-boot:run
-./mvnw -pl api-gateway spring-boot:run
-```
-
-## Run
+## Local development
 
 ```bash
 cd test-ui
@@ -24,7 +16,62 @@ npm run dev
 
 Open http://localhost:5173
 
-The Vite dev server proxies `/api` → `http://localhost:8080` (API gateway).
+The Vite dev server proxies `/api` → `http://localhost:8080` (API gateway). No env file needed.
+
+## Production build (host on a server)
+
+1. Point the UI at your gateway:
+
+```bash
+cp .env.example .env
+# edit .env — example:
+# VITE_API_BASE_URL=https://api.yourdomain.com
+```
+
+2. Build static assets:
+
+```bash
+npm install
+npm run build
+```
+
+Output is in `dist/`. Serve that folder with nginx, Caddy, S3+CloudFront, GitHub Pages, etc.
+
+3. Allow the frontend origin on the gateway (comma-separated patterns):
+
+```properties
+# api-gateway application.properties or env override
+app.cors.allowed-origins=https://ui.yourdomain.com,http://localhost:*
+```
+
+Example nginx snippet for the UI:
+
+```nginx
+server {
+  listen 80;
+  root /var/www/ecom-ui;
+  index index.html;
+  location / {
+    try_files $uri /index.html;
+  }
+}
+```
+
+## Project layout
+
+```
+src/
+  App.tsx                 # shell: tabs + session + request runner
+  api.ts                  # fetch helper + VITE_API_BASE_URL
+  types.ts
+  components/
+    Header.tsx
+    AuthTab.tsx
+    ProductsTab.tsx
+    OrdersTab.tsx
+    ResponsePanel.tsx
+    ProductFields.tsx
+```
 
 ## What you can test
 
