@@ -109,4 +109,4 @@ services:
       - api-gateway
 
 volumes:
-  db_data:~₹
+  db_data:
